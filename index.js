@@ -3,6 +3,7 @@ var fs = require('fs');
 var DEFAULT_EXCLUDE_DIR = /^\./;
 var DEFAULT_FILTER = /^([^\.].*)\.js(on)?$/;
 var DEFAULT_RECURSIVE = true;
+var DEFAULT_NEST_DIR = true;
 
 module.exports = function requireAll(options) {
   var dirname = typeof options === 'string' ? options : options.dirname;
@@ -12,6 +13,7 @@ module.exports = function requireAll(options) {
   var recursive = options.recursive === undefined ? DEFAULT_RECURSIVE : options.recursive;
   var resolve = options.resolve || identity;
   var map = options.map || identity;
+  var nestDir = options.nestDir === undefined ? DEFAULT_NEST_DIR : options.nestDir;
 
   function excludeDirectory(dirname) {
     return !recursive ||
@@ -42,13 +44,17 @@ module.exports = function requireAll(options) {
         filter: filter,
         excludeDirs: excludeDirs,
         map: map,
-        resolve: resolve
+        resolve: resolve,
+        nestDir: nestDir
       });
 
       if (Object.keys(subModules).length === 0) return;
 
-      modules[map(file, filepath)] = subModules;
-
+      if (nestDir) {
+        modules[map(file, filepath)] = subModules;
+      } else {
+        Object.assign(modules, subModules);
+      }
     } else {
       var name = filterFile(file);
       if (!name) return;

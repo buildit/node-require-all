@@ -259,3 +259,23 @@ assert.deepEqual(filterFunction, {
     }
   }
 });
+
+var nestdir = requireAll({
+  dirname: __dirname + '/mydir',
+  nestDir: false,
+});
+
+var nestdir_contents = {
+  foo: 'bar',
+  hello: {
+    world: true,
+    universe: 42
+  },
+  config: {
+    settingA: 'A',
+    settingB: 'B'
+  },
+  yes: true
+};
+
+assert.deepEqual(nestdir, nestdir_contents);

@@ -99,7 +99,48 @@ var controllers = requireAll({
 });
 ```
 
-Note that empty directories are always excluded from the end result.
+### Flatten files
+
+By default, data will be nested within the directories that they were created in. For example:
+
+```
+- parentDir
+  - childDir
+    - example.js
+```
+will create an object like this:
+
+```js
+{
+  parentDir: {
+    childDir: {
+      example: {
+        ...
+      }
+    }
+  }
+}
+```
+
+To flatten the file structure, set nestDir to false:
+
+```js
+var controllers = require('require-all')({
+  dirname : __dirname + '/controllers',
+  nestDir: false,
+});
+```
+which will create an object like this:
+
+```js
+{
+  example: {
+    ...
+  }
+}
+```
+If you have the same filename within the structure, previously referenced data will be overwritten.
+
 
 [npm-image]: https://img.shields.io/npm/v/require-all.svg
 [npm-url]: https://npmjs.org/package/require-all
